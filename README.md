@@ -31,3 +31,21 @@ The project uses a 21-customer sample, so its segment comparisons are explorator
 - [How to Run](#how-to-run)
 - [Project Files](#project-files)
 - [Data Source and Attribution](#data-source-and-attribution)
+
+## Project Background
+
+Subscription-based businesses rely on recurring customer relationships. When customers cancel, the business loses future billing and needs to understand where cancellations occur, which customer groups are affected, and what experiences may be associated with churn. Customer churn analysis helps organize these questions by connecting customer profiles, subscription details, and support records.
+
+This project examines a small customer dataset containing three related tables: customer information, subscription information, and customer support records. The tables are linked by `customerid`. The analysis uses the cancellation date to identify customers marked as churned, then compares the available churn results across plan type, subscription type, and state. It also explores customer tenure, monthly charges, cancellation timing, and support information.
+
+The project follows a practical analysis workflow:
+
+1. Inspect the SQLite database and review the tables and columns.
+2. Load the customer, subscription, and support data into Python.
+3. Clean selected fields, standardize categories, and convert date columns.
+4. Create a churn flag from the cancellation date.
+5. Summarize support records and join the tables for customer-level analysis.
+6. Calculate descriptive metrics and compare churn across available segments.
+7. Create visualizations to communicate the observed patterns.
+
+The goal is to demonstrate how SQL and Python can be used together to prepare relational customer data and answer focused business questions. The dataset contains 21 customers, so the segment comparisons are exploratory and are presented as observations from this sample.

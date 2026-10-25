@@ -8,7 +8,7 @@ The notebook also examines monthly cancellation counts, churn by state and subsc
 # Customer-Intelligence-and-Churn-Analysis
 Exploratory customer churn analysis using SQL and Python to clean and combine customer, subscription, and support data, calculate key metrics, and visualize patterns.
 
-###Introduction
+### Introduction
 
 Customer retention is an important part of understanding how a subscription business performs. This project brings together customer profiles, subscription details, and support records to explore where cancellations appear in the data and how churn patterns vary across plans, subscription types, and locations.
 

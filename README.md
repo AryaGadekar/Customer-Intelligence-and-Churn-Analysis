@@ -217,19 +217,19 @@ The country imputation assumes that each state maps to one country. That assumpt
 
 This project examines customer churn by combining customer profiles, subscription details, and support records. SQLite is used to connect to the database, identify its tables, and inspect their columns. Python and pandas handle data preparation, joins, metric calculations, and analysis, while Matplotlib and Seaborn are used to visualize the results.
 
-### -Churn patterns
+- ### Churn patterns
 
 Six of the 21 customers have a recorded cancellation date, resulting in an observed churn rate of **28.57%** and a retention rate of **71.43%**. The plan comparison shows the highest observed churn for Basic at **60.00% (3 of 5 customers)**, followed by Standard at **22.22% (2 of 9)** and Premium at **14.29% (1 of 7)**.
 
 Churn also varies by subscription type in this sample. The notebook reports **83.33% for Referral (5 of 6 customers)**, **16.67% for Paid (1 of 6)**, and **0% for Organic (0 of 9)**. State-level rates vary as well. For example, the notebook reports 100% for Karnataka, based on 2 customers, and 66.67% for Meghalaya, based on 3. These comparisons show how the notebook segments the data; the small group counts make the percentages sensitive to individual records.
 
-### Customer and subscription metrics
+- ### Customer and subscription metrics
 
 The average monthly charge is **18.85** in the dataset’s units. The notebook reports average customer tenure of approximately **1,566 days**, using cancellation dates for customers who churned and the notebook run date for customers without a cancellation date. It also sums **73.94** in monthly charges for customers who have already churned. The notebook labels this value “Revenue at Risk”; in this calculation, it represents monthly charges associated with recorded cancellations.
 
 The monthly trend chart counts cancellations by month. The plan and state charts compare churn percentages, while the subscription-type summary also reports customer counts and summed monthly charges. Together, these views provide several ways to explore the distribution of recorded churn within the dataset.
 
-### Support and churn score
+- ### Support and churn score
 
 The support analysis reports an escalation rate of **19.05%** and an average of **0.43 support records per customer**. The escalation comparison produces a correlation of **0.77** with churn status. In the final joined table, the notebook retains the latest support record per customer, so the escalation comparison reflects those records. It describes an association in the sample and does not show that escalations cause churn.
 

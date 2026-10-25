@@ -52,7 +52,7 @@ The analysis creates a churn flag from the cancellation date, summarizes support
 
 All metrics below are calculated in Python with pandas after the notebook loads the SQLite tables. SQLite is used to connect to the database, list its tables, and inspect their columns. The notebook does not use SQL queries to calculate these metrics.
 
-### 1. Churn Flag
+#### 1. Churn Flag
 
 The notebook derives a binary `churn_flag` from `cancellation_date`:
 
@@ -61,7 +61,7 @@ The notebook derives a binary `churn_flag` from `cancellation_date`:
 
 This is the outcome used in the notebook’s churn calculations.
 
-### 2. Overall Churn Rate
+#### 2. Overall Churn Rate
 
 The notebook calculates the mean of `churn_flag` and multiplies it by 100:
 
@@ -69,7 +69,7 @@ The notebook calculates the mean of `churn_flag` and multiplies it by 100:
 
 Six of the 21 customers have a cancellation date, so the sample churn rate is **28.57%**.
 
-### 3. Retention Rate
+#### 3. Retention Rate
 
 Retention is calculated as the complement of the churn rate:
 
@@ -77,7 +77,7 @@ Retention is calculated as the complement of the churn rate:
 
 For this sample, the resulting retention rate is **71.43%**. It uses the same customer population and cancellation-date definition as the churn rate.
 
-### 4. Churn Rate by Segment
+#### 4. Churn Rate by Segment
 
 The notebook groups customers by `plan_type`, `state`, and `subscription_type`. Within each group, it calculates the mean of `churn_flag` and converts it to a percentage:
 
@@ -93,7 +93,7 @@ For plan type, the notebook reports:
 
 The state and subscription-type summaries also include customer counts. Their monthly-charge totals are sums of the available `monthly_charges` values within each group.
 
-### 5. Average Monthly Charges
+#### 5. Average Monthly Charges
 
 The notebook calculates the mean of `monthly_charges` across the customer records:
 
@@ -101,13 +101,13 @@ The notebook calculates the mean of `monthly_charges` across the customer record
 
 The notebook labels this metric **ARPU**. It represents the average listed monthly charge per customer record in this sample.
 
-### 6. Customer Age and Churn by Age Group
+#### 6. Customer Age and Churn by Age Group
 
 Age is calculated from `dob` using the date the notebook is run. Customers are placed into these age bands: Under 18, 18–30, 31–45, 46–60, and 60+.
 
 For each band, the notebook calculates the average `churn_flag` as a percentage and counts unique customers. Because age is calculated using the run date, the age values and group assignments can change when the notebook is run later.
 
-### 7. Average Customer Tenure
+#### 7. Average Customer Tenure
 
 Tenure is calculated in days using the subscription start date:
 
@@ -116,7 +116,7 @@ Tenure is calculated in days using the subscription start date:
 
 The notebook then calculates the mean of `tenure_days` across the customer records. The tenure value for customers without a cancellation date changes as time passes.
 
-### 8. “Revenue at Risk”
+#### 8. “Revenue at Risk”
 
 The notebook sums `monthly_charges` for customers whose `churn_flag` is `1`:
 
@@ -124,7 +124,7 @@ The notebook sums `monthly_charges` for customers whose `churn_flag` is `1`:
 
 This is the total listed monthly charge associated with customers who have already churned. It is not a forecast of revenue from customers who may churn in the future.
 
-### 9. Escalation Rate
+#### 9. Escalation Rate
 
 The notebook calculates the percentage of rows in the final analysis table where `escalations` equals `Y`:
 
@@ -132,7 +132,7 @@ The notebook calculates the percentage of rows in the final analysis table where
 
 The support table can contain multiple records per customer. The notebook first calculates each customer's support-record count, then retains the latest support record per customer for the final join. As a result, this escalation percentage reflects the retained latest record for each customer, not the share of all support tickets that were escalated. Customers without a joined support record are included in the final customer table and do not match `Y`.
 
-### 10. Average Complaints per Customer
+#### 10. Average Complaints per Customer
 
 The notebook counts support records for each customer, then divides the total complaint count by the number of unique customers in the final analysis table:
 
@@ -140,13 +140,13 @@ The notebook counts support records for each customer, then divides the total co
 
 Customers with no support records contribute no complaints to the total but remain included in the customer denominator.
 
-### 11. Escalation and Churn Correlation
+#### 11. Escalation and Churn Correlation
 
 The notebook converts the escalation field to a binary indicator, assigning `1` to `Y` and `0` to other values, then calculates its correlation with `churn_flag`.
 
 This is a descriptive correlation between the retained escalation indicator and churn status in this sample. It does not show that escalations cause churn.
 
-### 12. Churn Risk Categories
+#### 12. Churn Risk Categories
 
 The notebook uses the provided `churn_score` field to assign categories:
 
@@ -158,7 +158,7 @@ The notebook uses the provided `churn_score` field to assign categories:
 
 It then calculates the mean `churn_flag` within each category and reports it as an observed churn percentage. The notebook uses a score supplied in the data; it does not create, train, or validate the score.
 
-### 13. Monthly Churn Trend
+#### 13. Monthly Churn Trend
 
 The notebook groups customers with a cancellation date by cancellation month and counts unique `customerid` values. It fills months with no recorded cancellations with zero and plots the result.
 
@@ -174,19 +174,19 @@ The analysis uses three tables from `customer_churn.db`. They are loaded into pa
 | `db_subscription` | Subscription details, charges, and cancellation information | 21 | One row per customer subscription |
 | `db_support` | Customer support records | 9 | One row per support record |
 
-### Source fields
+#### Source fields
 
 - **Customer table:** `customerid`, `name`, `country`, `state`, `gender`, `dob`, `interests`, and `pincode`
 - **Subscription table:** `customerid`, subscription start and renewal dates, subscription and plan types, contract type, cancellation date and reason, monthly charges, CLTV, and churn score
 - **Support table:** `customerid`, complaint date, escalation flag, CSAT score, and additional fields
 
-### Initial inspection
+#### Initial inspection
 
 The notebook connects to the SQLite database, retrieves the table names from the database metadata, and inspects each table's column names with `PRAGMA table_info`. It then loads the tables into pandas and uses `head()`, `tail()`, and `info()` to review sample rows, data types, and missing values.
 
 The notebook also compares row counts and distinct `customerid` counts. The customer and subscription tables each contain 21 rows and 21 distinct customer IDs. The support table contains 9 rows across 7 distinct customer IDs, so some customers have more than one support record.
 
-### Cleaning and preparation
+#### Cleaning and preparation
 
 The notebook makes the following changes before analysis:
 
@@ -201,13 +201,13 @@ The notebook makes the following changes before analysis:
 - Creates a support-record count for each customer, sorts support records by complaint date, and retains the latest support record per customer for the final join.
 - Creates `churn_flag` from whether `cancellation_date` is populated.
 
-### Join and row-count checks
+#### Join and row-count checks
 
 The notebook joins subscription records to customer records on `customerid`, then joins the support records. Before the final customer-level join, it reduces the support table to one latest record per customer. It checks table shapes and distinct customer counts to help identify row changes during merging.
 
 This approach keeps the final analysis table at the subscription/customer level rather than allowing multiple support records to multiply customer rows. The complaint count is calculated before retaining the latest support record, so the final table can include both a total support-record count and fields from the latest retained record.
 
-### Validation scope
+#### Validation scope
 
 These checks are exploratory diagnostics. The notebook reviews table shapes, IDs, data types, sample rows, and missing values, but it does not implement automated assertions for all possible data-quality issues. In particular, it does not formally test every join key for unmatched records, validate all date sequences, or enforce a database schema with constraints.
 
@@ -217,19 +217,19 @@ The country imputation assumes that each state maps to one country. That assumpt
 
 This project examines customer churn by combining customer profiles, subscription details, and support records. SQLite is used to connect to the database, identify its tables, and inspect their columns. Python and pandas handle data preparation, joins, metric calculations, and analysis, while Matplotlib and Seaborn are used to visualize the results.
 
-- ### Churn patterns
+- #### Churn patterns
 
 Six of the 21 customers have a recorded cancellation date, resulting in an observed churn rate of **28.57%** and a retention rate of **71.43%**. The plan comparison shows the highest observed churn for Basic at **60.00% (3 of 5 customers)**, followed by Standard at **22.22% (2 of 9)** and Premium at **14.29% (1 of 7)**.
 
 Churn also varies by subscription type in this sample. The notebook reports **83.33% for Referral (5 of 6 customers)**, **16.67% for Paid (1 of 6)**, and **0% for Organic (0 of 9)**. State-level rates vary as well. For example, the notebook reports 100% for Karnataka, based on 2 customers, and 66.67% for Meghalaya, based on 3. These comparisons show how the notebook segments the data; the small group counts make the percentages sensitive to individual records.
 
-- ### Customer and subscription metrics
+- #### Customer and subscription metrics
 
 The average monthly charge is **18.85** in the dataset’s units. The notebook reports average customer tenure of approximately **1,566 days**, using cancellation dates for customers who churned and the notebook run date for customers without a cancellation date. It also sums **73.94** in monthly charges for customers who have already churned. The notebook labels this value “Revenue at Risk”; in this calculation, it represents monthly charges associated with recorded cancellations.
 
 The monthly trend chart counts cancellations by month. The plan and state charts compare churn percentages, while the subscription-type summary also reports customer counts and summed monthly charges. Together, these views provide several ways to explore the distribution of recorded churn within the dataset.
 
-- ### Support and churn score
+- #### Support and churn score
 
 The support analysis reports an escalation rate of **19.05%** and an average of **0.43 support records per customer**. The escalation comparison produces a correlation of **0.77** with churn status. In the final joined table, the notebook retains the latest support record per customer, so the escalation comparison reflects those records. It describes an association in the sample and does not show that escalations cause churn.
 
@@ -243,7 +243,7 @@ The notebook demonstrates a customer analytics workflow using relational data, P
 
 This section explains the charts and summaries in the notebook’s analysis. The figures describe patterns in the available records. They are exploratory comparisons, not evidence that a customer attribute or support event caused churn.
 
-### 1. Monthly Customer Churn Trend
+#### 1. Monthly Customer Churn Trend
 
 The line chart counts unique customers by the month of their `cancellation_date`. The recorded cancellations occur in February, May, September, October, and November 2024. September has two cancellations; each of the other four months has one.
 
@@ -253,7 +253,7 @@ The chart counts cancellations in each month. It does not calculate a churn rate
   <img src="images/Data Model.png" width="700">
 </p>
 
-### 2. Churn Rate by Plan Type
+#### 2. Churn Rate by Plan Type
 
 The bar chart compares the mean `churn_flag` for each plan:
 
@@ -265,7 +265,7 @@ The bar chart compares the mean `churn_flag` for each plan:
 
 Basic has the highest observed percentage in this sample. Since each plan group is small, the percentage can change substantially with only one or two different records. The chart is useful for showing how to compare segment churn, but it does not establish that plan type explains why customers cancelled.
 
-### 3. Churn Rate by State
+#### 3. Churn Rate by State
 
 The state chart groups the customer records by state and plots the average `churn_flag` as a percentage.
 
@@ -283,7 +283,7 @@ The state chart groups the customer records by state and plots the average `chur
 
 The chart makes the variation across the recorded locations visible. The customer counts show why the percentages need care: for example, the 100% rate for Karnataka represents two customers, while the 0% rate for Nagaland represents one. The visualization does not identify a geographic cause for churn.
 
-### 4. Churn by Subscription Type
+#### 4. Churn by Subscription Type
 
 The notebook groups customers by `subscription_type` and calculates the observed churn rate, customer count, and sum of monthly charges.
 
@@ -297,25 +297,25 @@ The notebook groups customers by `subscription_type` and calculates the observed
 
 The notebook also sums `monthly_charges` by subscription type. These are sums of listed monthly charges for the records in each group, not revenue collected during a defined reporting period.
 
-### 5. Average Monthly Charges
+#### 5. Average Monthly Charges
 
 The notebook calculates the mean of `monthly_charges` across all customer records and reports **18.85** in the dataset’s units. It labels this value ARPU. In this notebook, it is the average listed monthly charge per customer record.
 
-### 6. Customer Age and Churn
+#### 6. Customer Age and Churn
 
 The notebook calculates age from `dob` using the date it is run, assigns customers to age bands, and calculates a churn percentage and customer count for each band. The chart is a descriptive comparison of those groups. Age values and band assignments can change when the notebook is rerun because the current date is used.
 
-### 7. Customer Tenure
+#### 7. Customer Tenure
 
 Tenure is calculated in days from subscription start to cancellation for customers with a cancellation date. For customers without a cancellation date, the notebook uses the date it is run. The notebook reports an average tenure of approximately **1,566 days**.
 
 This is a descriptive average across the sample. The tenure value for customers without a cancellation date increases over time, so the reported average may differ on a later run.
 
-### 8. Monthly Charges Associated with Churned Customers
+#### 8. Monthly Charges Associated with Churned Customers
 
 The notebook sums `monthly_charges` for customers whose `churn_flag` is `1`, producing **73.94** in the dataset’s charge units. The notebook labels the result “Revenue at Risk.” Because the sum includes customers who already have a cancellation date, it represents monthly charges associated with recorded churn.
 
-### 9. Support Complaints and Escalations
+#### 9. Support Complaints and Escalations
 
 The support table contains **9 support records across 7 distinct customers**. The notebook calculates a complaint count per customer before sorting the support records by complaint date and retaining the latest record per customer for the final join.
 
@@ -323,7 +323,7 @@ The notebook reports an average of **0.43 support records per customer** and an 
 
 The notebook also calculates a correlation of **0.77** between the binary escalation indicator and the churn flag. This describes an association in the joined sample. It does not demonstrate that escalations cause churn.
 
-### 10. Churn Score and Risk Categories
+#### 10. Churn Score and Risk Categories
 
 The notebook uses the supplied `churn_score` to define three categories:
 
@@ -335,21 +335,21 @@ The notebook uses the supplied `churn_score` to define three categories:
 
 The notebook compares these categories with the observed churn flag. The score is already present in the source data; this project does not create or validate it. Therefore, this comparison is descriptive and should not be presented as evidence of predictive model performance.
 
-### 11. Correlation Heatmap
+#### 11. Correlation Heatmap
 
 The heatmap displays correlations among selected fields, including plan type, contract type, churn score, churn flag, churn risk, and escalations. Plan, contract, and risk categories are converted to ordered numeric codes before calculating correlations.
 
 The heatmap is a compact way to inspect numeric associations. Correlations involving encoded categories depend on the chosen coding order, so they should not be interpreted as proof of a meaningful relationship or cause.
 
-### 12. Pairplot
+#### 12. Pairplot
 
 The pairplot shows pairwise distributions and relationships among the selected encoded fields. It can help identify visible groupings or unusual values, but with 21 customer records, individual observations can strongly affect the patterns.
 
-### 13. Monthly Charges by Plan, Gender, and Churn Risk
+#### 13. Monthly Charges by Plan, Gender, and Churn Risk
 
 The Seaborn categorical chart compares average `monthly_charges` by plan and gender, with separate panels for the notebook’s churn-risk categories. It provides a multi-variable view of the fields available in the sample. The chart does not measure the effect of gender, plan, or risk category on churn.
 
-### 14. Pivot Tables
+#### 14. Pivot Tables
 
 The notebook creates pivot tables that summarize churn by plan and combine monthly charge sums, unique customer counts, and average churn flags by plan. These tables offer a tabular view of some of the same group comparisons shown in the charts. The charge sums represent listed monthly charges, while the churn figures are proportions within the records in each plan group.
 
@@ -357,7 +357,7 @@ The notebook creates pivot tables that summarize churn by plan and combine month
 
 The notebook identifies patterns that can guide further investigation. Because the analysis uses a small sample, the recommendations below are hypotheses for a larger customer dataset, not proven retention actions.
 
-### 1. Investigate the Basic plan experience
+#### 1. Investigate the Basic plan experience
 
 Basic has the highest observed plan churn in the sample, at 60% (3 of 5 customers). Review cancellation reasons, customer feedback, pricing, and the services included with this plan. Compare the Basic experience with Standard and Premium to identify specific differences that may merit investigation.
 
@@ -368,7 +368,7 @@ Basic has the highest observed plan churn in the sample, at 60% (3 of 5 customer
 - Monthly charges associated with churned customers by plan
 - Retention by plan over a consistently defined reporting period
 
-### 2. Review the referral subscription segment
+#### 2. Review the referral subscription segment
 
 The source value labeled `Refferal` has an observed churn rate of 83.33% (5 of 6 customers). Before changing acquisition or retention practices, verify the category values and review the records and cancellation reasons for these customers. If the pattern persists in a larger dataset, investigate whether customers from this channel differ in onboarding, expectations, or early service experience.
 
@@ -379,7 +379,7 @@ The source value labeled `Refferal` has an observed churn rate of 83.33% (5 of 6
 - Retention at defined intervals after signup
 - Monthly charges associated with cancellations by type
 
-### 3. Examine support experience around cancellation
+#### 3. Examine support experience around cancellation
 
 The notebook finds an association between the latest retained escalation indicator and churn status. This can motivate a closer review of support experiences, but the current calculation uses the latest support record per customer and does not establish that escalation causes churn.
 
@@ -393,7 +393,7 @@ In a fuller support dataset, analyze all support records and compare their dates
 - Cancellation rate after an escalated support interaction
 - Time between a support interaction and cancellation
 
-### 4. Track cancellations over time with a defined denominator
+#### 4. Track cancellations over time with a defined denominator
 
 The notebook's monthly chart counts cancellations by cancellation month. To use this for ongoing monitoring, pair cancellation counts with the number of active customers who could have churned in each period.
 
@@ -405,7 +405,7 @@ The notebook's monthly chart counts cancellations by cancellation month. To use 
 - New subscriptions and cancellations by month
 - Retention by signup cohort
 
-### 5. Define financial measures precisely
+#### 5. Define financial measures precisely
 
 The notebook sums monthly charges for customers who already have a cancellation date. For future reporting, define whether the business wants to track monthly charges associated with churned customers, recurring revenue lost during a period, or revenue from active customers considered at risk. These answer different questions.
 
@@ -416,7 +416,7 @@ The notebook sums monthly charges for customers who already have a cancellation 
 - Active recurring revenue by plan
 - Customer counts and revenue alongside each segment churn rate
 
-### 6. Treat the supplied churn score as an existing field
+#### 6. Treat the supplied churn score as an existing field
 
 The notebook groups the source `churn_score` into low, medium, and high categories and compares them with cancellation status. It does not build or validate the score. Use the result only as a descriptive comparison unless the score's definition, timing, and performance are documented.
 
@@ -437,7 +437,7 @@ The current notebook does not test retention interventions or measure business i
 
 The notebook uses SQLite to access the project database, then performs data preparation, calculations, and visualization in Python.
 
-### SQLite and SQL
+#### SQLite and SQL
 
 SQLite stores the project data in three related tables: `db_customer`, `db_subscription`, and `db_support`. The notebook connects to `customer_churn.db` with Python’s `sqlite3` library.
 
@@ -449,7 +449,7 @@ SQL is used to:
 
 The notebook does not use SQL to calculate churn metrics or perform the analytical joins. Those steps are carried out in Python with pandas.
 
-### Python libraries
+#### Python libraries
 
 - **pandas** loads tables into DataFrames, inspects data, converts dates, standardizes values, joins tables, groups records, calculates metrics, and creates pivot tables.
 - **NumPy** creates the binary churn flag, assigns churn risk categories from the supplied score, and converts the escalation field to a numeric indicator for correlation analysis.
@@ -457,7 +457,7 @@ The notebook does not use SQL to calculate churn metrics or perform the analytic
 - **Seaborn** creates the correlation heatmap, pairplot, and multi-variable categorical chart.
 - **sqlite3** opens and closes the SQLite database connection.
 
-### Data preparation
+#### Data preparation
 
 The notebook reviews table samples, data types, and missing values using pandas methods such as `head()`, `tail()`, and `info()`. It then prepares selected fields for analysis:
 
@@ -469,17 +469,17 @@ The notebook reviews table samples, data types, and missing values using pandas 
 6. Calculates each customer's support-record count and retains the latest support record for the final customer-level join.
 7. Creates `churn_flag` from whether the cancellation date is present.
 
-### Combining and summarizing data
+#### Combining and summarizing data
 
 The subscription table is joined with customer information on `customerid`. The support data is summarized at customer level before being joined, so multiple support records do not multiply customer rows in the final analysis table.
 
 The notebook compares table shapes and distinct customer counts before and after joining. It also groups records by plan, state, subscription type, age band, and churn-risk category to calculate sample counts, churn percentages, and selected monthly-charge summaries.
 
-### Metrics and analysis
+#### Metrics and analysis
 
 The notebook calculates churn and retention percentages, average monthly charges, customer tenure, monthly charges associated with customers who have churned, support-record counts, escalation percentages, and correlations between selected fields. It also groups the supplied `churn_score` into low, medium, and high categories and compares those categories with the observed churn flag.
 
-### Visualizations
+#### Visualizations
 
 The notebook uses Matplotlib and Seaborn to create:
 
@@ -496,48 +496,48 @@ The charts are exploratory views of the data. They help communicate the calculat
 
 The analysis reflects the fields and records available in the project database. The following assumptions affect how its metrics and charts should be interpreted.
 
-### Dataset size and coverage
+#### Dataset size and coverage
 
 - The customer and subscription tables each contain 21 records. The support table contains 9 records across 7 customers.
 - Segment groups are small, so a small change in the records can substantially change a churn percentage.
 - The data does not provide a documented reporting period or a sequence of monthly customer snapshots.
 - The analysis assumes the customer and subscription tables represent the same customer population and that `customerid` is the appropriate key for combining them.
 
-### Churn definition and denominator
+#### Churn definition and denominator
 
 - A customer is marked as churned when `cancellation_date` is present. A missing cancellation date is treated as not churned.
 - The overall churn rate uses the customer rows in the analysis table as its denominator. The notebook does not define a reporting cutoff or specify which customers were eligible to churn during a particular period.
 - The monthly trend chart counts cancellations by cancellation month. It does not divide by the number of active customers in each month, so it is not a monthly churn rate.
 - The source does not include customer status snapshots over time, so the analysis cannot show how the active customer population changed month by month.
 
-### Support records and joins
+#### Support records and joins
 
 - The support table can contain multiple records for a customer. The notebook calculates a complaint count, sorts support records by complaint date, and retains the latest support record per customer for the final join.
 - Escalation analysis in the final customer-level table therefore reflects the latest retained support record, not all tickets.
 - Customers without a joined support record remain in the final table. When the escalation field is converted to a binary value, records that do not equal `Y`, including missing values, are assigned `0`.
 - The correlation between escalation and churn is descriptive. It does not establish that escalation occurred before cancellation or caused it.
 
-### Metric assumptions
+#### Metric assumptions
 
 - **Average monthly charges:** The notebook calculates the mean of `monthly_charges` and labels it ARPU. The source does not define a reporting period or currency unit for this metric.
 - **“Revenue at Risk”:** The notebook sums monthly charges for customers who already have a cancellation date. It does not estimate future losses from customers who may churn.
 - **State and subscription-type charge totals:** These are sums of listed monthly charges in each group, not revenue collected over a defined period.
 - **Average complaints per customer:** This uses the support-record counts divided by the number of customers in the analysis table, including customers with no support record.
 
-### Date-based calculations
+#### Date-based calculations
 
 - Tenure for customers with a cancellation date is measured from subscription start to cancellation.
 - Tenure for customers without a cancellation date is measured from subscription start to the date the notebook is run. The result can change when the notebook is rerun.
 - Customer age is also calculated using the date the notebook is run, so age and age-band assignments can change over time.
 - The country imputation fills missing values using a state-to-country mapping from available records. This assumes each state maps unambiguously to one country.
 
-### Supplied churn score and visual analysis
+#### Supplied churn score and visual analysis
 
 - `churn_score` is provided in the source data. The notebook groups it into low, medium, and high categories but does not document how the score was produced or validate its predictive performance.
 - The correlation heatmap and pairplot use numeric encodings for selected categorical fields. Correlations involving encoded categories depend on the chosen numeric order and may not represent a meaningful relationship.
 - The notebook uses descriptive summaries and visual comparisons. It does not include statistical significance testing, causal analysis, or a validated predictive model.
 
-### SQL scope
+#### SQL scope
 
 SQLite is used to connect to the database, list tables, and inspect their columns. Data cleaning, joins, metric calculations, and visual analysis are performed in Python with pandas and NumPy. The notebook does not contain SQL analysis queries for calculating the reported churn metrics.
 
@@ -545,17 +545,17 @@ SQLite is used to connect to the database, list tables, and inspect their column
 
 The current notebook provides an exploratory analysis of customer, subscription, and support data. To make the project more reliable, easier to reproduce, and more useful for business analysis, we need to strengthen the metric definitions, data checks, and documentation.
 
-### 1. Define the reporting period and churn population
+#### 1. Define the reporting period and churn population
 
 We need to choose and document an `analysis_date` and a reporting period. We also need to define which customers belong in the population being measured and the event that qualifies as churn. This will make it clear which customers are included in each rate and when the measurement applies.
 
 For monthly reporting, we need to identify the customers who were active and eligible to churn during each month. We can then calculate:
 
-`Monthly churn rate = customers who cancelled during the month / customers eligible to churn during the month`
+`Monthly churn rate = customers who cancelled during the month/customers eligible to churn during the month`
 
 The monthly cancellation chart in the current notebook counts cancellations by month. Adding the eligible customer base would let us report a rate as well as a count.
 
-### 2. Add SQL analysis queries
+#### 2. Add SQL analysis queries
 
 We need to add SQL queries that answer some of the notebook's business questions directly from the SQLite database. These could include:
 
@@ -567,7 +567,7 @@ We need to add SQL queries that answer some of the notebook's business questions
 
 We should compare the results of these SQL queries with the corresponding pandas calculations. Matching results would provide a useful validation check and make the SQL analysis more visible in the project.
 
-### 3. Expand data-quality checks
+#### 3. Expand data-quality checks
 
 We need to add a consistent set of checks before analyzing the data. These checks should confirm that:
 
@@ -581,7 +581,7 @@ We need to add a consistent set of checks before analyzing the data. These check
 
 We should summarize the check results in the notebook so readers can see what was checked and whether any issues were found.
 
-### 4. Analyze all support records
+#### 4. Analyze all support records
 
 We need to preserve the full support history for ticket-level analysis instead of relying only on the latest support record for each customer. From the full support table, we can calculate:
 
@@ -593,15 +593,15 @@ We need to preserve the full support history for ticket-level analysis instead o
 
 We should keep ticket-level measures separate from customer-level measures. For example, escalation rate across support tickets should use tickets as its denominator, while the percentage of customers with an escalation should use customers as its denominator.
 
-### 5. Make age and tenure calculations reproducible
+#### 5. Make age and tenure calculations reproducible
 
 We need to define a fixed `analysis_date` near the beginning of the notebook and use it for age and tenure calculations. The current notebook uses the date it is run for customers without a cancellation date, which means those values change over time.
 
 Using one documented analysis date will make the notebook's results stable when it is rerun with the same data. We should also state whether tenure is measured in calendar days or complete months.
 
-### 6. Add context to the visualizations
+#### 6. Add context to the visualizations
 
-We need to show the number of customers behind each plan and state percentage. A churn percentage without its group size can be difficult to interpret, especially when a group contains only a few customers.
+We need to show the number of customers behind each plan and the percentage. A churn percentage without its group size can be difficult to interpret, especially when a group contains only a few customers.
 
 We should also:
 
@@ -611,7 +611,7 @@ We should also:
 - Document how categories are encoded in the correlation heatmap and pairplot.
 - Avoid interpreting correlations involving encoded categories as direct evidence of a meaningful relationship.
 
-### 7. Turn observations into measurable follow-up questions
+#### 7. Turn observations into measurable follow-up questions
 
 With a larger dataset, we need to check whether the patterns observed by plan and subscription type remain consistent. We should also examine whether support activity occurs before cancellation and whether the association holds across a longer period.
 
@@ -625,7 +625,7 @@ If a retention action is tested, we need to define the eligible customers, compa
 
 These measures would help distinguish an observed pattern from a change associated with a specific retention action.
 
-### 8. Improve project reproducibility
+#### 8. Improve project reproducibility
 
 We need to document the Python version and required packages, identify which files are inputs and which are generated outputs, and explain how to rebuild the SQLite database from the Excel workbook.
 
@@ -635,14 +635,14 @@ We should also make sure the notebook runs from a fresh copy of the repository. 
 
 The notebook reads data from `customer_churn.db`. Keep the database and notebook in the same project folder before running the analysis.
 
-### 1. Clone the repository
+#### 1. Clone the repository
 
 ```bash
 git clone https://github.com/AryaGadekar/Customer-Intelligence-and-Churn-Analysis.git
 cd Customer-Intelligence-and-Churn-Analysis
 ```
 
-### 2. Create a Python environment
+#### 2. Create a Python environment
 
 **macOS or Linux:**
 
@@ -658,7 +658,7 @@ python -m venv .venv
 .venv\Scripts\activate
 ```
 
-### 3. Install the required packages
+#### 3. Install the required packages
 
 ```bash
 python -m pip install pandas numpy matplotlib seaborn jupyter
@@ -666,7 +666,7 @@ python -m pip install pandas numpy matplotlib seaborn jupyter
 
 The notebook uses Python's built-in `sqlite3` library, so it does not need to be installed separately.
 
-### 4. Launch Jupyter Notebook
+#### 4. Launch Jupyter Notebook
 
 Run this command from the project folder:
 
@@ -676,7 +676,7 @@ jupyter notebook
 
 In the browser window, open `Customer-Intelligence-and-Churn-Analysis.ipynb`.
 
-### 5. Run the notebook
+#### 5. Run the notebook
 
 Run the notebook cells from top to bottom. It connects to `customer_churn.db`, inspects the tables and columns, loads the customer, subscription, and support data into pandas, and performs the data preparation, analysis, and visualizations.
 
@@ -709,7 +709,7 @@ Customer-Intelligence-and-Churn-Analysis/
   The SQLite database read by the notebook. It contains the `db_customer`, `db_subscription`, and `db_support` tables.
 
 - **`customer_churn_data_raw.xlsx`**  
-  The workbook containing the source data in separate sheets for customers, subscriptions, and support records. The notebook reads from the existing SQLite database, so it does not rebuild the database from this workbook.
+  The workbook contains the source data in separate sheets for customers, subscriptions, and support records. The notebook reads from the existing SQLite database, so it does not rebuild the database from this workbook.
 
 - **`exported_churn_data.csv`**  
   The combined dataset exported by the notebook. It is generated when the relevant notebook cell runs and can be regenerated from the database.

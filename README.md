@@ -65,7 +65,7 @@ This is the outcome used in the notebook’s churn calculations.
 
 The notebook calculates the mean of `churn_flag` and multiplies it by 100:
 
-`Churn rate = (customers with a cancellation date / customers in the analysis table) × 100`
+`Churn rate = (customers with a cancellation date/customers in the analysis table) × 100.`
 
 Six of the 21 customers have a cancellation date, so the sample churn rate is **28.57%**.
 
@@ -81,7 +81,7 @@ For this sample, the resulting retention rate is **71.43%**. It uses the same cu
 
 The notebook groups customers by `plan_type`, `state`, and `subscription_type`. Within each group, it calculates the mean of `churn_flag` and converts it to a percentage:
 
-`Segment churn rate = (customers in the segment with a cancellation date / customers in the segment) × 100`
+`Segment churn rate = (customers in the segment with a cancellation date/customers in the segment) × 100`
 
 For plan type, the notebook reports:
 
@@ -97,7 +97,7 @@ The state and subscription-type summaries also include customer counts. Their mo
 
 The notebook calculates the mean of `monthly_charges` across the customer records:
 
-`Average monthly charges = sum of monthly charges / number of customer records`
+`Average monthly charges = sum of monthly charges/number of customer records`
 
 The notebook labels this metric **ARPU**. It represents the average listed monthly charge per customer record in this sample.
 
@@ -217,11 +217,11 @@ The country imputation assumes that each state maps to one country. That assumpt
 
 This project examines customer churn by combining customer profiles, subscription details, and support records. SQLite is used to connect to the database, identify its tables, and inspect their columns. Python and pandas handle data preparation, joins, metric calculations, and analysis, while Matplotlib and Seaborn are used to visualize the results.
 
-### Churn patterns
+### -Churn patterns
 
 Six of the 21 customers have a recorded cancellation date, resulting in an observed churn rate of **28.57%** and a retention rate of **71.43%**. The plan comparison shows the highest observed churn for Basic at **60.00% (3 of 5 customers)**, followed by Standard at **22.22% (2 of 9)** and Premium at **14.29% (1 of 7)**.
 
-Churn also varies by subscription type in this sample. The notebook reports **83.33% for Refferal (5 of 6 customers)**, **16.67% for Paid (1 of 6)**, and **0% for Organic (0 of 9)**. State-level rates vary as well. For example, the notebook reports 100% for Karnataka, based on 2 customers, and 66.67% for Meghalaya, based on 3. These comparisons show how the notebook segments the data; the small group counts make the percentages sensitive to individual records.
+Churn also varies by subscription type in this sample. The notebook reports **83.33% for Referral (5 of 6 customers)**, **16.67% for Paid (1 of 6)**, and **0% for Organic (0 of 9)**. State-level rates vary as well. For example, the notebook reports 100% for Karnataka, based on 2 customers, and 66.67% for Meghalaya, based on 3. These comparisons show how the notebook segments the data; the small group counts make the percentages sensitive to individual records.
 
 ### Customer and subscription metrics
 

@@ -387,7 +387,7 @@ The Seaborn categorical chart compares average `monthly_charges` by plan and gen
 
 <p align="center">
   <img
-    src="images/Monthly-charges-by-plan-gender-churn-risk.png"
+    src="images/Monthly_Charges_by_Plan_Gender_Churn_Risk.png"
     width="100%"
     alt="Monthly customer charges by subscription plan, gender, and churn risk"
   >

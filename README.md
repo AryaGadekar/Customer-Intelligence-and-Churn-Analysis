@@ -250,7 +250,11 @@ The line chart counts unique customers by the month of their `cancellation_date`
 The chart counts cancellations in each month. It does not calculate a churn rate because the notebook does not calculate how many customers were active and eligible to churn in each month.
 
 <p align="center">
-  <img src="images/Monthly_Customer_churn_Trend.png" width="800">
+  <img
+    src="images/Monthly_Customer_Churn_Trend.png"
+    width="100%"
+    alt="Monthly customer cancellation counts"
+  >
 </p>
 
 #### 2. Churn Rate by Plan Type
@@ -266,7 +270,11 @@ The bar chart compares the mean `churn_flag` for each plan:
 Basic has the highest observed percentage in this sample. Since each plan group is small, the percentage can change substantially with only one or two different records. The chart is useful for comparing segment churn, but it does not show that plan type explains why customers cancelled.
 
 <p align="center">
-  <img src="images/Churn_Rate_Plan_Type.png" width="700">
+  <img
+    src="images/Churn_Rate_Plan_Type.png"
+    width="100%"
+    alt="Customer churn rate by subscription plan type"
+  >
 </p>
 
 #### 3. Churn Rate by State
@@ -288,7 +296,11 @@ The state chart groups the customer records by state and plots the average `chur
 The chart makes the variation across the recorded locations visible. The customer counts show why the percentages need care: for example, the 100% rate for Karnataka represents two customers, while the 0% rate for Nagaland represents one. The visualization does not identify a geographic cause for churn.
 
 <p align="center">
-  <img src="images/Churn_Rate_State.png" width="1000">
+  <img
+    src="images/Churn_Rate_State.png"
+    width="100%"
+    alt="Customer churn rate by state"
+  >
 </p>
 
 #### 4. Churn by Subscription Type
@@ -311,7 +323,7 @@ The notebook calculates the mean of `monthly_charges` across all customer record
 
 #### 6. Customer Age and Churn
 
-The notebook calculates age from `dob` using the date it is run, assigns customers to age bands, and calculates a churn percentage and customer count for each band. The chart is a descriptive comparison of those groups. Age values and band assignments can change when the notebook is rerun because the current date is used.
+The notebook calculates age from `dob` using the run date, assigns customers to age bands, and calculates churn percentage and customer count for each band. The chart is a descriptive comparison of those groups. Age values and band assignments can change when the notebook is rerun because the current date is used.
 
 #### 7. Customer Tenure
 
@@ -350,7 +362,11 @@ The heatmap displays correlations among selected fields, including plan type, co
 The heatmap is a compact way to inspect numeric associations. Correlations involving encoded categories depend on the chosen coding order, so they should not be interpreted as proof of a meaningful relationship or cause.
 
 <p align="center">
-  <img src="images/Correlation Heatmap.png" width="700">
+  <img
+    src="images/Correlation_Heatmap.png"
+    width="100%"
+    alt="Correlation heatmap showing relationships between customer churn analysis variables"
+  >
 </p>
 
 #### 12. Pairplot
@@ -358,7 +374,11 @@ The heatmap is a compact way to inspect numeric associations. Correlations invol
 The pairplot shows pairwise distributions and relationships among the selected encoded fields. It can help identify visible groupings or unusual values, but with 21 customer records, individual observations can strongly affect the patterns.
 
 <p align="center">
-  <img src="images/Pairplot.png" width="700">
+  <img
+    src="images/Pairplot.png"
+    width="100%"
+    alt="Pairplot showing relationships and distributions among customer churn analysis variables"
+  >
 </p>
 
 #### 13. Monthly Charges by Plan, Gender, and Churn Risk
@@ -366,7 +386,11 @@ The pairplot shows pairwise distributions and relationships among the selected e
 The Seaborn categorical chart compares average `monthly_charges` by plan and gender, with separate panels for the notebook’s churn-risk categories. It provides a multi-variable view of the fields available in the sample. The chart does not measure the effect of gender, plan, or risk category on churn.
 
 <p align="center">
-  <img src="images/Monthly Charges by Plan Type, Gender and Churn Risk.png" width="1000">
+  <img
+    src="images/Monthly-charges-by-plan-gender-churn-risk.png"
+    width="100%"
+    alt="Monthly customer charges by subscription plan, gender, and churn risk"
+  >
 </p>
 
 #### 14. Pivot Tables

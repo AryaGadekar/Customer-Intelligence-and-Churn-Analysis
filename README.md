@@ -251,7 +251,7 @@ The chart counts cancellations in each month. It does not calculate a churn rate
 
 <p align="center">
   <img
-    src="images/Monthly_Customer_Churn_Trend.png"
+    src="images/Monthly_Customer_churn_Trend.png"
     width="100%"
     alt="Monthly customer cancellation counts"
   >

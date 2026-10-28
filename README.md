@@ -366,7 +366,7 @@ The pairplot shows pairwise distributions and relationships among the selected e
 The Seaborn categorical chart compares average `monthly_charges` by plan and gender, with separate panels for the notebook’s churn-risk categories. It provides a multi-variable view of the fields available in the sample. The chart does not measure the effect of gender, plan, or risk category on churn.
 
 <p align="center">
-  <img src="images/Monthly Charges by Plan Type, Gender and Churn Risk.png" width="700">
+  <img src="images/Monthly Charges by Plan Type, Gender and Churn Risk.png" width="1000">
 </p>
 
 #### 14. Pivot Tables

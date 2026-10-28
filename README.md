@@ -595,93 +595,23 @@ SQLite is used to connect to the database, list tables, and inspect their column
 
 ## Next Steps
 
-The current notebook provides an exploratory analysis of customer, subscription, and support data. To make the project more reliable, easier to reproduce, and more useful for business analysis, we need to strengthen the metric definitions, data checks, and documentation.
+The current notebook provides an exploratory analysis of customer, subscription, and support data. The following improvements would make the analysis more reliable, reproducible, and useful for business reporting.
 
 #### 1. Define the reporting period and churn population
 
-We need to choose and document an `analysis_date` and a reporting period. We also need to define which customers belong in the population being measured and the event that qualifies as churn. This will make it clear which customers are included in each rate and when the measurement applies.
+Document the analysis_date, reporting period, customer population, and event used to define churn. For monthly reporting, identify customers eligible to churn during each month and calculate churn rates alongside cancellation counts.
 
-For monthly reporting, we need to identify the customers who were active and eligible to churn during each month. We can then calculate:
+#### 2. Add SQL analysis and validation
 
-`Monthly churn rate = customers who cancelled during the month/customers eligible to churn during the month`
+Add SQL queries for customer counts, churn rates by plan and contract, monthly cancellations, and data-quality checks. Compare the SQL results with the corresponding pandas calculations to validate the metrics and demonstrate SQL usage.
 
-The monthly cancellation chart in the current notebook counts cancellations by month. Adding the eligible customer base would let us report a rate as well as a count.
+#### 3. Strengthen data quality and reproducibility
 
-#### 2. Add SQL analysis queries
+Add checks for duplicate customer IDs, missing values, unmatched records, inconsistent categories, and date validity. Use a consistent analysis_date for age and tenure calculations, document the required packages and input files, and ensure the notebook can run from a fresh repository copy.
 
-We need to add SQL queries that answer some of the notebook's business questions directly from the SQLite database. These could include:
+#### 4. Expand support analysis
 
-- Total customers and subscriptions
-- Churn rate by plan, contract, and subscription type
-- Cancellation counts by month
-- Monthly charges associated with cancelled subscriptions
-- Data-quality checks for duplicate IDs, missing values, and unmatched records
-
-We should compare the results of these SQL queries with the corresponding pandas calculations. Matching results would provide a useful validation check and make the SQL analysis more visible in the project.
-
-#### 3. Expand data-quality checks
-
-We need to add a consistent set of checks before analyzing the data. These checks should confirm that:
-
-- `customerid` is unique in tables intended to contain one row per customer.
-- Customer IDs in the subscription and support tables can be matched to the customer table where expected.
-- Required fields do not contain unexpected missing values.
-- Categories such as plan type, contract type, gender, and escalation status use consistent values.
-- Subscription start, renewal, complaint, and cancellation dates follow sensible date order.
-- Monthly charges and churn scores fall within expected ranges.
-- Table row counts remain as expected after each join.
-
-We should summarize the check results in the notebook so readers can see what was checked and whether any issues were found.
-
-#### 4. Analyze all support records
-
-We need to preserve the full support history for ticket-level analysis instead of relying only on the latest support record for each customer. From the full support table, we can calculate:
-
-- Number of support records per customer
-- Number and percentage of escalated tickets
-- Average CSAT score per customer
-- Time between support contacts
-- Support activity before a cancellation
-
-We should keep ticket-level measures separate from customer-level measures. For example, escalation rate across support tickets should use tickets as its denominator, while the percentage of customers with an escalation should use customers as its denominator.
-
-#### 5. Make age and tenure calculations reproducible
-
-We need to define a fixed `analysis_date` near the beginning of the notebook and use it for age and tenure calculations. The current notebook uses the date it is run for customers without a cancellation date, which means those values change over time.
-
-Using one documented analysis date will make the notebook's results stable when it is rerun with the same data. We should also state whether tenure is measured in calendar days or complete months.
-
-#### 6. Add context to the visualizations
-
-We need to show the number of customers behind each plan and the percentage. A churn percentage without its group size can be difficult to interpret, especially when a group contains only a few customers.
-
-We should also:
-
-- Label monthly cancellation charts as counts unless a denominator is included.
-- Identify whether charge values are averages or totals, and state their units.
-- Sort segment charts consistently to make comparisons easier.
-- Document how categories are encoded in the correlation heatmap and pairplot.
-- Avoid interpreting correlations involving encoded categories as direct evidence of a meaningful relationship.
-
-#### 7. Turn observations into measurable follow-up questions
-
-With a larger dataset, we need to check whether the patterns observed by plan and subscription type remain consistent. We should also examine whether support activity occurs before cancellation and whether the association holds across a longer period.
-
-If a retention action is tested, we need to define the eligible customers, comparison period, and success criteria before evaluating the outcome. Measures could include:
-
-- Churn rate during the measurement period
-- Recurring charges retained
-- Customer satisfaction
-- Support workload
-- Discount or retention-offer cost
-
-These measures would help distinguish an observed pattern from a change associated with a specific retention action.
-
-#### 8. Improve project reproducibility
-
-We need to document the Python version and required packages, identify which files are inputs and which are generated outputs, and explain how to rebuild the SQLite database from the Excel workbook.
-
-We should also make sure the notebook runs from a fresh copy of the repository. Using the same input files and fixed analysis date should produce the same tables, metrics, and charts. Finally, we need to add the source and reuse terms for the dataset before publishing the workbook or database.
+Preserve the full support history for ticket-level analysis. Explore support volume, escalation rate, CSAT, and activity before cancellation, keeping ticket-level measures separate from customer-level measures. With a larger dataset, investigate whether support activity is associated with churn across a longer reporting period.
 
 ## How to Run
 

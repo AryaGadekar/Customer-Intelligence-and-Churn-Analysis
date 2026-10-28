@@ -288,7 +288,7 @@ The state chart groups the customer records by state and plots the average `chur
 The chart makes the variation across the recorded locations visible. The customer counts show why the percentages need care: for example, the 100% rate for Karnataka represents two customers, while the 0% rate for Nagaland represents one. The visualization does not identify a geographic cause for churn.
 
 <p align="center">
-  <img src="images/Churn_Rate_State.png" width="700">
+  <img src="images/Churn_Rate_State.png" width="900">
 </p>
 
 #### 4. Churn by Subscription Type
@@ -349,13 +349,25 @@ The heatmap displays correlations among selected fields, including plan type, co
 
 The heatmap is a compact way to inspect numeric associations. Correlations involving encoded categories depend on the chosen coding order, so they should not be interpreted as proof of a meaningful relationship or cause.
 
+<p align="center">
+  <img src="images/Correlation Heatmap.png" width="700">
+</p>
+
 #### 12. Pairplot
 
 The pairplot shows pairwise distributions and relationships among the selected encoded fields. It can help identify visible groupings or unusual values, but with 21 customer records, individual observations can strongly affect the patterns.
 
+<p align="center">
+  <img src="images/Pairplot.png" width="700">
+</p>
+
 #### 13. Monthly Charges by Plan, Gender, and Churn Risk
 
 The Seaborn categorical chart compares average `monthly_charges` by plan and gender, with separate panels for the notebook’s churn-risk categories. It provides a multi-variable view of the fields available in the sample. The chart does not measure the effect of gender, plan, or risk category on churn.
+
+<p align="center">
+  <img src="images/Monthly Charges by Plan Type, Gender and Churn Risk.png" width="700">
+</p>
 
 #### 14. Pivot Tables
 

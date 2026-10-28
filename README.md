@@ -250,7 +250,7 @@ The line chart counts unique customers by the month of their `cancellation_date`
 The chart counts cancellations in each month. It does not calculate a churn rate because the notebook does not calculate how many customers were active and eligible to churn in each month.
 
 <p align="center">
-  <img src="images/Monthly_Customer_churn_Trend.png" width="700">
+  <img src="images/Monthly_Customer_churn_Trend.png" width="800">
 </p>
 
 #### 2. Churn Rate by Plan Type
@@ -263,7 +263,7 @@ The bar chart compares the mean `churn_flag` for each plan:
 | Standard | 9 | 2 | 22.22% |
 | Premium | 7 | 1 | 14.29% |
 
-Basic has the highest observed percentage in this sample. Since each plan group is small, the percentage can change substantially with only one or two different records. The chart is useful for showing how to compare segment churn, but it does not establish that plan type explains why customers cancelled.
+Basic has the highest observed percentage in this sample. Since each plan group is small, the percentage can change substantially with only one or two different records. The chart is useful for comparing segment churn, but it does not show that plan type explains why customers cancelled.
 
 <p align="center">
   <img src="images/Churn_Rate_Plan_Type.png" width="700">
@@ -288,7 +288,7 @@ The state chart groups the customer records by state and plots the average `chur
 The chart makes the variation across the recorded locations visible. The customer counts show why the percentages need care: for example, the 100% rate for Karnataka represents two customers, while the 0% rate for Nagaland represents one. The visualization does not identify a geographic cause for churn.
 
 <p align="center">
-  <img src="images/Churn_Rate_State.png" width="900">
+  <img src="images/Churn_Rate_State.png" width="1000">
 </p>
 
 #### 4. Churn by Subscription Type

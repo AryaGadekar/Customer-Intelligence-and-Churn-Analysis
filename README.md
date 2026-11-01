@@ -1,5 +1,5 @@
 ## TL;DR
-This project explores customer churn using a small relational dataset containing 21 customer records, 21 subscription records, and 9 support records. I used SQLite and SQL to inspect the database tables, and Python with pandas, NumPy, Matplotlib, and Seaborn to clean and combine the data, calculate metrics, and visualize patterns.
+This project explores customer churn using a small relational dataset containing 21 customer records, 21 subscription records, and 9 support records. I used SQLite and SQL to inspect the database tables and to run churn analysis queries (aggregations, a three-table join, a CTE, and window functions), and Python with pandas, NumPy, Matplotlib, and Seaborn to clean and combine the data, calculate metrics, and visualize patterns.
 
 In the sample, 6 of 21 customers have a cancellation date, giving an observed churn share of 28.57%. Churn varies across plans in this dataset: Basic is 60%, Standard 22.22%, and Premium 14.29%. These are exploratory sample results, not reliable estimates of broader customer behavior: each plan group is small, the data has no defined reporting window, and the comparisons do not establish what caused a customer to churn.
 
@@ -58,7 +58,7 @@ The analysis creates a churn flag from the cancellation date, summarizes support
 
 ## Key Metrics
 
-All metrics below are calculated in Python with pandas after the notebook loads the SQLite tables. SQLite is used to connect to the database, list its tables, and inspect their columns. The notebook does not use SQL queries to calculate these metrics.
+The metrics below are calculated in Python with pandas after the notebook loads the SQLite tables. Section 10 of the notebook repeats the key churn calculations in SQL (overall churn, churn by plan and subscription type) and the results match the pandas outputs.
 
 #### 1. Churn Flag
 

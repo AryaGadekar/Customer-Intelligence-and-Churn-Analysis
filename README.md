@@ -521,7 +521,7 @@ The notebook reviews table samples, data types, and missing values using pandas 
 2. Drops selected customer and support columns that are not used in the analysis.
 3. Converts date fields, including date of birth, subscription dates, and complaint dates, to datetime values.
 4. Standardizes selected gender values.
-5. Corrects the spelling of 'Refferal' to 'Referral' in the subscription type column.
+5. 5. Corrects the spelling of `Refferal` to `Referral` in the subscription type column.
 6. Fills missing country values using a state-to-country mapping from non-missing rows.
 7. Calculates each customer's support-record count and retains the latest support record for the final customer-level join.
 8. Creates `churn_flag` from whether the cancellation date is present.

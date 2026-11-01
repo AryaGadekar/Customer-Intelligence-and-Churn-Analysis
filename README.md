@@ -44,7 +44,7 @@ The project uses a 21-customer sample, so its segment comparisons are explorator
 
 Subscription-based businesses rely on recurring customer relationships. When customers cancel, the business loses future billing and needs to understand where cancellations occur, which customer groups are affected, and what experiences may be associated with churn. Customer churn analysis helps organize these questions by connecting customer profiles, subscription details, and support records.
 
-The database contains three tables connected by `customerid`: customer details, subscription details, and support records. The notebook uses SQLite to connect to the database, list its tables, and inspect their columns. It then uses Python and pandas to load, clean, summarize, and combine the data for analysis. It also runs SQL queries to calculate churn rates and join the tables.”
+The database contains three tables connected by `customerid`: customer details, subscription details, and support records. The notebook uses SQLite to connect to the database, list its tables, and inspect their columns. It then uses Python and pandas to load, clean, summarize, and combine the data for analysis. It also runs SQL queries to calculate churn rates and join the tables.
 
 The notebook explores the following questions:
 
@@ -521,7 +521,7 @@ The notebook reviews table samples, data types, and missing values using pandas 
 2. Drops selected customer and support columns that are not used in the analysis.
 3. Converts date fields, including date of birth, subscription dates, and complaint dates, to datetime values.
 4. Standardizes selected gender values.
-5. Corrects the spelling of Refferal to Referral in the subscription type column.
+5. Corrects the spelling of 'Refferal' to 'Referral' in the subscription type column.
 6. Fills missing country values using a state-to-country mapping from non-missing rows.
 7. Calculates each customer's support-record count and retains the latest support record for the final customer-level join.
 8. Creates `churn_flag` from whether the cancellation date is present.

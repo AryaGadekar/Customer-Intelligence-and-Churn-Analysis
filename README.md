@@ -44,7 +44,7 @@ The project uses a 21-customer sample, so its segment comparisons are explorator
 
 Subscription-based businesses rely on recurring customer relationships. When customers cancel, the business loses future billing and needs to understand where cancellations occur, which customer groups are affected, and what experiences may be associated with churn. Customer churn analysis helps organize these questions by connecting customer profiles, subscription details, and support records.
 
-The database contains three tables connected by `customerid`: customer details, subscription details, and support records. The notebook uses SQLite to connect to the database, list its tables, and inspect their columns. It then uses Python and pandas to load, clean, summarize, and combine the data for analysis.
+The database contains three tables connected by `customerid`: customer details, subscription details, and support records. The notebook uses SQLite to connect to the database, list its tables, and inspect their columns. It then uses Python and pandas to load, clean, summarize, and combine the data for analysis. It also runs SQL queries to calculate churn rates and join the tables.”
 
 The notebook explores the following questions:
 
@@ -206,6 +206,7 @@ The notebook makes the following changes before analysis:
 - Converts subscription start, renewal, and cancellation dates to datetime values.
 - Drops `col_1` and `comment` from the support table.
 - Converts support complaint dates to datetime values.
+- Corrects the spelling of `Refferal` to `Referral` in the subscription type column.
 - Creates a support-record count for each customer, sorts support records by complaint date, and retains the latest support record per customer for the final join.
 - Creates `churn_flag` from whether `cancellation_date` is populated.
 
@@ -223,7 +224,7 @@ The country imputation assumes that each state maps to one country. That assumpt
 
 ## Executive Summary
 
-This project examines customer churn by combining customer profiles, subscription details, and support records. SQLite is used to connect to the database, identify its tables, and inspect their columns. Python and pandas handle data preparation, joins, metric calculations, and analysis, while Matplotlib and Seaborn are used to visualize the results.
+This project examines customer churn by combining customer profiles, subscription details, and support records. SQLite is used to connect to the database, inspect its tables, and run SQL queries that reproduce the key churn metrics and the three-table join. Python and pandas handle data preparation, the remaining metric calculations, and analysis, while Matplotlib and Seaborn are used to visualize the results.
 
 - #### Churn patterns
 
@@ -233,7 +234,7 @@ Churn also varies by subscription type in this sample. The notebook reports **83
 
 - #### Customer and subscription metrics
 
-The average monthly charge is **18.85** in the dataset’s units. The notebook reports average customer tenure of approximately **1,566 days**, using cancellation dates for customers who churned and the notebook run date for customers without a cancellation date. It also sums **73.94** in monthly charges for customers who have already churned. The notebook labels this value “Revenue at Risk”; in this calculation, it represents monthly charges associated with recorded cancellations.
+The average monthly charge is **18.85** in the dataset’s units. The notebook reports average customer tenure of approximately **1,573 days**, using cancellation dates for customers who churned and the notebook run date for customers without a cancellation date. It also sums **73.94** in monthly charges for customers who have already churned. The notebook labels this value “Revenue at Risk”; in this calculation, it represents monthly charges associated with recorded cancellations.
 
 The monthly trend chart counts cancellations by month. The plan and state charts compare churn percentages, while the subscription-type summary also reports customer counts and summed monthly charges. Together, these views provide several ways to explore the distribution of recorded churn within the dataset.
 
@@ -319,9 +320,9 @@ The notebook groups customers by `subscription_type` and calculates the observed
 | --- | ---: | ---: | ---: |
 | Organic | 9 | 0 | 0.00% |
 | Paid | 6 | 1 | 16.67% |
-| Refferal | 6 | 5 | 83.33% |
+| Referral | 6 | 5 | 83.33% |
 
-`Refferal` is the spelling used in the source data. The group has the highest observed churn percentage in this sample. This is a useful segment to investigate in a larger dataset, but these records alone cannot show that referral acquisition leads to churn.
+The source data spells this value `Refferal`; the notebook corrects it to `Referral`. The group has the highest observed churn percentage in this sample. This is a useful segment to investigate in a larger dataset, but these records alone cannot show that referral acquisition leads to churn.
 
 The notebook also sums `monthly_charges` by subscription type. These are sums of listed monthly charges for the records in each group, not revenue collected during a defined reporting period.
 
@@ -335,7 +336,7 @@ The notebook calculates age from `dob` using the run date, assigns customers to 
 
 #### 7. Customer Tenure
 
-Tenure is calculated in days from subscription start to cancellation for customers with a cancellation date. For customers without a cancellation date, the notebook uses the date it is run. The notebook reports an average tenure of approximately **1,566 days**.
+Tenure is calculated in days from subscription start to cancellation for customers with a cancellation date. For customers without a cancellation date, the notebook uses the date it is run. The notebook reports an average tenure of approximately **1,573 days**.
 
 This is a descriptive average across the sample. The tenure value for customers without a cancellation date increases over time, so the reported average may differ on a later run.
 
@@ -422,7 +423,7 @@ Basic has the highest observed plan churn in the sample, at 60% (3 of 5 customer
 
 #### 2. Review the referral subscription segment
 
-The source value labeled `Refferal` has an observed churn rate of 83.33% (5 of 6 customers). Before changing acquisition or retention practices, verify the category values and review the records and cancellation reasons for these customers. If the pattern persists in a larger dataset, investigate whether customers from this channel differ in onboarding, expectations, or early service experience.
+The `Referral` subscription type (spelled `Refferal` in the source data) has an observed churn rate of 83.33% (5 of 6 customers). Before changing acquisition or retention practices, verify the category values and review the records and cancellation reasons for these customers. If the pattern persists in a larger dataset, investigate whether customers from this channel differ in onboarding, expectations, or early service experience.
 
 **Measures to monitor:**
 
@@ -498,8 +499,11 @@ SQL is used to:
 - Query `sqlite_master` to retrieve the database table names.
 - Run `PRAGMA table_info` for each table to inspect its columns.
 - Load each table into pandas with `pd.read_sql`.
+- Calculate churn rate overall and by plan type and subscription type using aggregation with `GROUP BY`.
+- Join the subscription, customer, and support tables, using a CTE with `ROW_NUMBER()` to keep the latest support record per customer.
+- Rank states by churn rate using a CTE and `RANK()`.
 
-The notebook does not use SQL to calculate churn metrics or perform the analytical joins. Those steps are carried out in Python with pandas.
+The SQL results are compared with the pandas results. Data cleaning, the remaining metrics, and the visualizations are done in Python.
 
 #### Python libraries
 
@@ -517,9 +521,10 @@ The notebook reviews table samples, data types, and missing values using pandas 
 2. Drops selected customer and support columns that are not used in the analysis.
 3. Converts date fields, including date of birth, subscription dates, and complaint dates, to datetime values.
 4. Standardizes selected gender values.
-5. Fills missing country values using a state-to-country mapping from non-missing rows.
-6. Calculates each customer's support-record count and retains the latest support record for the final customer-level join.
-7. Creates `churn_flag` from whether the cancellation date is present.
+5. Corrects the spelling of Refferal to Referral in the subscription type column.
+6. Fills missing country values using a state-to-country mapping from non-missing rows.
+7. Calculates each customer's support-record count and retains the latest support record for the final customer-level join.
+8. Creates `churn_flag` from whether the cancellation date is present.
 
 #### Combining and summarizing data
 
@@ -591,7 +596,7 @@ The analysis reflects the fields and records available in the project database. 
 
 #### SQL scope
 
-SQLite is used to connect to the database, list tables, and inspect their columns. Data cleaning, joins, metric calculations, and visual analysis are performed in Python with pandas and NumPy. The notebook does not contain SQL analysis queries for calculating the reported churn metrics.
+SQL is used to inspect the database, to calculate churn rates by plan and subscription type, and to join the three tables. Data cleaning, the remaining metrics, and visual analysis are performed in Python with pandas and NumPy. The SQL queries are written for SQLite.
 
 ## Next Steps
 
@@ -601,9 +606,9 @@ The current notebook provides an exploratory analysis of customer, subscription,
 
 Document the analysis_date, reporting period, customer population, and event used to define churn. For monthly reporting, identify customers eligible to churn during each month and calculate churn rates alongside cancellation counts.
 
-#### 2. Add SQL analysis and validation
+#### 2. Extend the SQL analysis
 
-Add SQL queries for customer counts, churn rates by plan and contract, monthly cancellations, and data-quality checks. Compare the SQL results with the corresponding pandas calculations to validate the metrics and demonstrate SQL usage.
+Add SQL queries for monthly cancellations, churn by contract type, and data-quality checks (duplicate IDs, unmatched records), and compare them with the pandas results.
 
 #### 3. Strengthen data quality and reproducibility
 
@@ -694,21 +699,21 @@ Customer-Intelligence-and-Churn-Analysis/
   The workbook contains the source data in separate sheets for customers, subscriptions, and support records. The notebook reads from the existing SQLite database, so it does not rebuild the database from this workbook.
 
 - **`exported_churn_data.csv`**  
-  The combined dataset exported by the notebook. It is generated when the relevant notebook cell runs and can be regenerated from the database.
+   The notebook exports the combined dataset. It is generated when the relevant notebook cell runs and can be regenerated from the database.
 
 - **`Data Analytics Project -Churn Analysis Report.pdf`**  
-  A supporting report with a written summary of the project. Include this file if it is part of the final project deliverables.
+  A supporting report with a written summary of the project. 
 
 - **`README.md`**  
   Project overview, metric definitions, data details, findings, limitations, and instructions for running the notebook.
 
-The main notebook is `Customer-Intelligence-and-Churn-Analysis.ipynb`. A separate `reference_churn_analysis.ipynb` file is not required to run the project.
+The main notebook is `Customer-Intelligence-and-Churn-Analysis.ipynb`. 
 
 ## Data Source and Attribution
 
-The analysis uses the files `customer_churn_data_raw.xlsx` and `customer_churn.db`. The workbook contains three sheets: `db_customer`, `db_subscription`, and `db_support`. These tables are linked by `customerid`. The main notebook reads the existing SQLite database and loads its tables into pandas. The reference notebook includes code for creating the database from the workbook.
+The analysis uses the files `customer_churn_data_raw.xlsx` and `customer_churn.db`. The workbook contains three sheets: `db_customer`, `db_subscription`, and `db_support`. These tables are linked by `customerid`. The main notebook reads the existing SQLite database and loads its tables into pandas. 
 
 The dataset contains 21 customer records, 21 subscription records, and 9 support records. It includes customer profile fields, subscription dates and plan details, monthly charges, cancellation information, churn scores, and support records.
 
-The dataset is a tutorial sample, not a representative extract from a real company. Its results should not be treated as industry churn benchmarks or as evidence of actual business performance.
+The dataset is a tutorial sample, not a representative extract from a real company. Do not treat its results as industry churn benchmarks or evidence of actual business performance.
 
